@@ -1,0 +1,10 @@
+*.class
+target
+.idea
+*.iml
+*.log*
+.DS_Store
+dataset
+# Package Files #
+*.jar
+
