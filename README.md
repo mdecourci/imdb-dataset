@@ -1,16 +1,26 @@
-##### Goal
+### Goal
 
 Your task is to write a Spark application that can answer the following questions using the imdb data set.
 
 
-##### Q1
+#### Q1
 Retrieve the top 20 movies with a minimum of 50 votes with the ranking determined by:
 
-(numVotes/averageNumberOfVotes) * averageRating
+rank = (numVotes/averageNumberOfVotes) * averageRating
 
-##### Q2
+topMovies = select * from movie inner join (select id, numVotes, rank as ranking from ratings) as ranked_ratings 
+on movie.id = ranked_ratings.id 
+where ranked_ratings.numVotes > 50
+order by ranked_ratings.x desc
+limit 20
+
+#### Q2
+
 For these 20 movies, list the persons who are most often credited and list the
 different titles of the 20 movies.
+
+select name_basics.primaryName from topMovies where topMovies.tconst=(select knownForTitles from name_basics)
+select primaryTitle from topMovies;
 
 The application should:
 
@@ -22,25 +32,16 @@ The application should:
 
 Avoid sql statements like bellow as much as possible: e.g spark.sql(“select x,y,z from table1”)
 
-###### Approach
-
-Run in cluster 
-Set up main program to run in cluster
-Reproducible ? - can work with other datasets
+#### Approach
 
 Look at dataset and documentation - how best to process data
 
-Engineering
-abstract
-method
 a) Load and test dataset 
-a) Retrieve the top 20 movies
+b) Retrieve the top 20 movies
 b) Run (a) with any  criteria min x votes
-c) Create criteria for x votes (numVotes/averageNumberOfVotes) * averageRating
-results
+d) Create criteria for x votes (numVotes/averageNumberOfVotes) * averageRating
 
-
-##### IMDb Dataset Details 
+#### IMDb Dataset Details 
 Each dataset is contained in a gzipped, tab-separated-values (TSV) formatted file in the UTF-8 character set. The first line in each file contains headers that describe what is in each column. A ‘\N’ is used to denote that a particular field is missing or null for that title/name. The available datasets are as follows: 
 
 ***title.akas.tsv.gz*** - Contains the following information for titles:
@@ -71,24 +72,27 @@ Each dataset is contained in a gzipped, tab-separated-values (TSV) formatted fil
 **title.episode.tsv.gz** – Contains the tv episode information. Fields include:
 
 * tconst (string) - alphanumeric identifier of episode
-parentTconst (string) - alphanumeric identifier of the parent TV Series
-seasonNumber (integer) – season number the episode belongs to
-episodeNumber (integer) – episode number of the tconst in the TV series
-title.principals.tsv.gz – Contains the principal cast/crew for titles
-tconst (string) - alphanumeric unique identifier of the title
-ordering (integer) – a number to uniquely identify rows for a given titleId
-nconst (string) - alphanumeric unique identifier of the name/person
-category (string) - the category of job that person was in
-job (string) - the specific job title if applicable, else '\N'
-characters (string) - the name of the character played if applicable, else '\N'
-title.ratings.tsv.gz – Contains the IMDb rating and votes information for titles
-tconst (string) - alphanumeric unique identifier of the title
-averageRating – weighted average of all the individual user ratings
-numVotes - number of votes the title has received
-name.basics.tsv.gz – Contains the following information for names:
-nconst (string) - alphanumeric unique identifier of the name/person
-primaryName (string)– name by which the person is most often credited
-birthYear – in YYYY format
-deathYear – in YYYY format if applicable, else '\N'
-primaryProfession (array of strings)– the top-3 professions of the person
-knownForTitles (array of tconsts) – titles the person is known for
+* parentTconst (string) - alphanumeric identifier of the parent TV Series
+* seasonNumber (integer) – season number the episode belongs to
+* episodeNumber (integer) – episode number of the tconst in the TV series
+
+**title.principals.tsv.gz** – Contains the principal cast/crew for titles
+* tconst (string) - alphanumeric unique identifier of the title
+* ordering (integer) – a number to uniquely identify rows for a given titleId
+* nconst (string) - alphanumeric unique identifier of the name/person
+* category (string) - the category of job that person was in
+* job (string) - the specific job title if applicable, else '\N'
+* characters (string) - the name of the character played if applicable, else '\N'
+
+**title.ratings.tsv.gz** – Contains the IMDb rating and votes information for titles
+* tconst (string) - alphanumeric unique identifier of the title
+* averageRating – weighted average of all the individual user ratings
+* numVotes - number of votes the title has received
+
+**name.basics.tsv.gz** – Contains the following information for names:
+* nconst (string) - alphanumeric unique identifier of the name/person
+* primaryName (string)– name by which the person is most often credited
+* birthYear – in YYYY format
+* deathYear – in YYYY format if applicable, else '\N'
+* primaryProfession (array of strings)– the top-3 professions of the person
+* knownForTitles (array of tconsts) – titles the person is known for
