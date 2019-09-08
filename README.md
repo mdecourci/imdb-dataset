@@ -38,8 +38,11 @@ Look at dataset and documentation - how best to process data
 
 a) Load and test dataset 
 b) Retrieve the top 20 movies
-b) Run (a) with any  criteria min x votes
+c) Run (a) with any  criteria min x votes
 d) Create criteria for x votes (numVotes/averageNumberOfVotes) * averageRating
+Submit
+./bin/spark-submit --class com.netpod.bgcpartners.imdb.ImdbDataSet --master spark://badger.local:7077 file:///Users/michaeldecourci/projects/imdb-dataset/target/imdb-dataset-1.0-SNAPSHOT.jar
+
 
 #### IMDb Dataset Details 
 Each dataset is contained in a gzipped, tab-separated-values (TSV) formatted file in the UTF-8 character set. The first line in each file contains headers that describe what is in each column. A ‘\N’ is used to denote that a particular field is missing or null for that title/name. The available datasets are as follows: 
