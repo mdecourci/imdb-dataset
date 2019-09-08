@@ -45,11 +45,11 @@ public class ImdbService {
         Dataset<Title> movieTitles = sparkSession.read().option("header","true").option("delimiter", "\t").csv(fileUrl.getFile())
                 .withColumnRenamed("tconst", "id")
                 .as(titleEncoder)
-                .filter((FilterFunction<Title>) title -> title.getTitleType().equals("movie"));
+                .filter((FilterFunction<Title>) title -> title.getTitleType().equals("movie")).cache();
 
         Dataset<Row> topDataSet =
                 movieTitles
-                        .joinWith(ratingDataset,ratingDataset.col("id").equalTo(movieTitles.col("id"))).limit(20);
+                        .joinWith(ratingDataset,ratingDataset.col("id").equalTo(movieTitles.col("id"))).cache().limit(20);
 
         List topList = topDataSet.collectAsList();
         return topList;
@@ -62,7 +62,7 @@ public class ImdbService {
 
         Dataset<Rating> ratingDataset = sparkSession.read().option("header","true").option("delimiter", "\t").csv(fileUrl.getFile())
                 .withColumnRenamed("tconst", "id")
-                .as(ratingEncoder);
+                .as(ratingEncoder).cache();
 
         return ratingDataset;
     }
