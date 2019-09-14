@@ -2,8 +2,7 @@
 
 Your task is to write a Spark application that can answer the following questions using the imdb data set.
 
-
-#### Q1
+# First
 Retrieve the top 20 movies with a minimum of 50 votes with the ranking determined by:
 
 rank = (numVotes/averageNumberOfVotes) * averageRating
@@ -14,8 +13,7 @@ where ranked_ratings.numVotes > 50
 order by ranked_ratings.x desc
 limit 20
 
-#### Q2
-
+# Second
 For these 20 movies, list the persons who are most often credited and list the
 different titles of the 20 movies.
 
